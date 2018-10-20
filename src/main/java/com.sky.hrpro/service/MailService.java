@@ -24,6 +24,9 @@ public class MailService {
     @Autowired
     private MailRecordDao mailRecordDao;
 
+    /**
+     * 发送邮件
+     */
     public boolean sendMail(String to,String text,String title){
         Properties props = new Properties();
         props.setProperty("mail.smtp.host", "smtp.163.com"); // 设置发送邮件的邮件服务器的属性（这里使用网易的smtp服务器）
@@ -63,4 +66,12 @@ public class MailService {
         }
         return true;
     }
+
+    /**
+     * 查询邮件
+    */
+    public MailRecordEntity getMailRecord(String toAddress){
+        return mailRecordDao.getMailRecord(Constants.MAIL_FROM_IP,toAddress);
+    }
 }
+

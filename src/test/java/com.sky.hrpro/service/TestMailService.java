@@ -1,5 +1,6 @@
 package com.sky.hrpro.service;
 
+import com.sky.hrpro.entity.MailRecordEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,16 @@ public class TestMailService {
          * 注意：如果邮件内容违规是发不出去的。
          * 请参看网易企业退信常见问题：http://help.163.com/09/1224/17/5RAJ4LMH00753VB8.html
          */
-        String to = "857516673@qq.com";
+        String to = "***@qq.com";
         String text = "明天早上我在家等你 一起去爬山";
         String title = "明天去爬山";
         mailService.sendMail(to, text, title);
+    }
+
+    @Test
+    public void testGetMailRecord(){
+        String toAddress = "***@qq.com";
+        MailRecordEntity mailRecordEntity = mailService.getMailRecord(toAddress);
+        System.out.println(mailRecordEntity.getContent());
     }
 }
