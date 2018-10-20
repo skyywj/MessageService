@@ -1,6 +1,11 @@
 package com.sky.hrpro.service;
 
+import com.sky.hrpro.dao.IdDao;
+import com.sky.hrpro.dao.MailRecordDao;
+import com.sky.hrpro.entity.MailRecordEntity;
 import com.sky.hrpro.util.Constants;
+import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Properties;
@@ -13,6 +18,11 @@ import javax.mail.internet.*;
  */
 @Service
 public class MailService {
+    @Autowired
+    private IdDao idDao;
+
+    @Autowired
+    private MailRecordDao mailRecordDao;
 
     public boolean sendMail(String to,String text,String title){
         Properties props = new Properties();
@@ -37,6 +47,16 @@ public class MailService {
             transport.connect("smtp.163.com", Constants.MAIL_FROM_NAME, Constants.MAIL_FROM_PASSWORD); // 把邮件发送出去
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
+
+            MailRecordEntity mailRecordEntity = new MailRecordEntity();
+            mailRecordEntity.setFromAddress(Constants.MAIL_FROM_IP);
+            mailRecordEntity.setToAddress(to);
+            mailRecordEntity.setContent(text);
+            mailRecordEntity.setTitle(title);
+            mailRecordEntity.setCreatedTime(System.currentTimeMillis());
+            mailRecordEntity.setUpdatedTime(System.currentTimeMillis());
+
+            mailRecordDao.addRecord(mailRecordEntity);
         } catch (MessagingException e) {
             e.printStackTrace();
             return false;
